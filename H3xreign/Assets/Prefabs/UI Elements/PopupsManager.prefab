@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2499389445548549985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7805441102967984659}
+  - component: {fileID: 6861695173396718798}
+  m_Layer: 0
+  m_Name: PopupsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7805441102967984659
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2499389445548549985}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6861695173396718798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2499389445548549985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6c84bc9322ec9e4a91b96729f6bc370, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: {fileID: 923910423439984017, guid: 403c655ce228c8e42a8faef7545f3c6b, type: 3}
+  crit: {fileID: 3683548548937947039, guid: b0bf935f0ccb05948946b25335d5c5aa, type: 3}
+  dodge: {fileID: 5739506615308732404, guid: 0dd3a66d139b60449848d17a3e604442, type: 3}
+  miss: {fileID: 2743938352659152342, guid: 027bfd76edf4e8b41aeda42d09736cdd, type: 3}
+  hacked: {fileID: 4790094040061110160, guid: 0a401d673306ba54fa06e20e2d1b4568, type: 3}
+  stunned: {fileID: 5183657118554656677, guid: d5c17a020b484c949ad09bb74243bc4f, type: 3}
+  resistHacked: {fileID: 6148521034318681346, guid: c14bc06f238c4e1469e060f4fe60427f,
+    type: 3}
+  resistStunned: {fileID: 7636087880864730380, guid: b0d00b96255b20f40bbc960fb0c4d0f8,
+    type: 3}
+  dead: {fileID: 1664741833245767426, guid: 637f39ed43c4e1a43a11a0213be2517a, type: 3}
