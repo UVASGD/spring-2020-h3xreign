@@ -44,6 +44,8 @@ public class BasicUnit : MonoBehaviour
     public Sides side;
     public bool alive = true;
     public bool stunned = false;
+    public int baseDamage;
+    public int baseDamageRange;
     int modifiers = 0;
 
     protected BasicUnit[] allies;
@@ -163,13 +165,23 @@ public class BasicUnit : MonoBehaviour
         }
     }
 
+    // Use Action/ability/move/turn
+    public void Action(int index, int target)
+    {
+        if (moveset[index].UseAction(this, target)) ;
+            //combat.NextTurn();
+        else
+            print("Invalid target!");
+    }
+
+
     // How do you wanna do this?
-    // Requires attribute to make the attack, the base damage of the attack, and the range which the damage fluctuates about the base damage.
-    public bool AttackTarget(BasicUnit target, Attributes attribute, int baseDmg, int dmgRange = 0)
+    // Requires target, attribute to make the attack, and percent of this unit's base damage that the attack does (1 for full damage)
+    public bool AttackTarget(BasicUnit target, Attributes attribute, float percentBaseDmg = 1f)
     {
         if (Roll(attribute))
         {
-            int dmg = Random.Range(baseDmg - dmgRange, baseDmg + dmgRange + 1);
+            int dmg = (int)((Random.Range(baseDamage - baseDamageRange, baseDamage + baseDamageRange + 1)) * percentBaseDmg);
             if(Random.Range(0, 100) < crit)
             {
                 dmg = dmg * 2;
@@ -185,18 +197,18 @@ public class BasicUnit : MonoBehaviour
     }
 
     // Attack target at position index
-    public bool AttackPosition(int index, Attributes attribute, int dmg, int dmgRange = 0)
+    public bool AttackPosition(int index, Attributes attribute, float percentBaseDmg = 1f)
     {
         if(index < 0 || index > enemies.Length)
         {
             print("Invalid target");
             return false;
         }
-        return AttackTarget(enemies[index], attribute, dmg, dmgRange);
+        return AttackTarget(enemies[index], attribute, percentBaseDmg);
     }
 
     // Attack groups from start (inclusive) to end (exclusive)
-    public void AttackPositions(short start, short end, Attributes attribute, int dmg, int dmgRange = 0)
+    public void AttackPositions(short start, short end, Attributes attribute, float percentBaseDmg = 1f)
     {
         if (start < 0 || end > enemies.Length)
         {
@@ -205,7 +217,7 @@ public class BasicUnit : MonoBehaviour
         }
         for (int i = start; i < end; i++)
         {
-            AttackPosition(i, attribute, dmg, dmgRange);
+            AttackPosition(i, attribute, percentBaseDmg);
         }
     }
 

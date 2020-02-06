@@ -49,7 +49,7 @@ public class CombatController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.N))
             {
-                activeUnit = NextTurn();
+                NextTurn();
             }
             if (activeUnit)
             {
@@ -60,24 +60,24 @@ public class CombatController : MonoBehaviour
                     if (activeUnit.unitName != "H3x")
                     {
                         if (Input.GetKeyDown(KeyCode.Alpha0))
-                            activeUnit.AttackPosition(0, BasicUnit.Attributes.finess, 8, 4);
+                            activeUnit.Action(0, 0);
                         else if (Input.GetKeyDown(KeyCode.Alpha1))
-                            activeUnit.AttackPosition(1, BasicUnit.Attributes.finess, 8, 4);
+                            activeUnit.Action(0, 1);
                         else if (Input.GetKeyDown(KeyCode.Alpha2))
-                            activeUnit.AttackPosition(2, BasicUnit.Attributes.finess, 8, 4);
+                            activeUnit.Action(0, 2);
                         else if (Input.GetKeyDown(KeyCode.Alpha3))
-                            activeUnit.AttackPosition(3, BasicUnit.Attributes.finess, 8, 4);
+                            activeUnit.Action(0, 3);
                     }
                     else
                     {
                         if (Input.GetKeyDown(KeyCode.Alpha0))
-                            activeUnit.AttackPosition(0, BasicUnit.Attributes.intellect, 8, 4);
+                            activeUnit.Action(0, 0);
                         else if (Input.GetKeyDown(KeyCode.Alpha1))
-                            activeUnit.AttackPosition(1, BasicUnit.Attributes.intellect, 8, 4);
+                            activeUnit.Action(0, 1);
                         else if (Input.GetKeyDown(KeyCode.Alpha2))
-                            activeUnit.AttackPosition(2, BasicUnit.Attributes.intellect, 8, 4);
+                            activeUnit.Action(0, 2);
                         else if (Input.GetKeyDown(KeyCode.Alpha3))
-                            activeUnit.AttackPosition(3, BasicUnit.Attributes.intellect, 8, 4);
+                            activeUnit.Action(0, 3);
                         else if (Input.GetKeyDown(KeyCode.R))
                             activeUnit.AffectPositions(0, 4, BasicUnit.Effects.stun);
                         else if (Input.GetKeyDown(KeyCode.H))
@@ -86,7 +86,7 @@ public class CombatController : MonoBehaviour
                 }
                 if (activeUnit.stunned)
                 {
-                    activeUnit = NextTurn();
+                    NextTurn();
                 }
             }
             inCombat = !CheckVictory();
@@ -117,7 +117,7 @@ public class CombatController : MonoBehaviour
         turnOrder.Clear();
     }
 
-    public BasicUnit NextTurn()
+    public void NextTurn()
     {
         BasicUnit nextUp = turnOrder.Dequeue();
         turnOrder.Enqueue(nextUp);  // Put back into turn order at the end
@@ -129,10 +129,16 @@ public class CombatController : MonoBehaviour
         {
             print("Next up is " + nextUp.unitName + " but they are dead!");
             nextUp.popupText.DeathPopup();
+            NextTurn();
+            return;
         }
         else if (nextUp.stunned)
+        {
             print("Next up is " + nextUp.unitName + " but they are stunned! Skipping turn...");
-        return nextUp;
+            NextTurn();
+            return;
+        }
+        activeUnit = nextUp;
     }
 
     // Returns list of units on same side as current unit
