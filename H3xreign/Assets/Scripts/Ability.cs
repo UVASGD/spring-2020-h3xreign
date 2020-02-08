@@ -35,7 +35,7 @@ public class Ability : ScriptableObject
         if (ValidTarget(position))
         {
             if (attack)
-                outcome = user.AttackPosition(position, attribute, attackMod);
+                user.AttackPosition(position, attribute, attackMod);
         }
         else
             return false;
