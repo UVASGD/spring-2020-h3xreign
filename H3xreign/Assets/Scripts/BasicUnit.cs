@@ -31,6 +31,10 @@ public class BasicUnit : MonoBehaviour
     public int intellect;  // Chance of success for intellect abilities
     public int willpower;  // Chance of success for willpower abilities & resisting mental effects
     public int charm;  // Chance of success for fucking
+
+    public int energy;  // Current energy to use for abilities
+    public int energyGain = 1;  // Energy gain per turn (usually 1)
+    public int energyBonusChance;  // Percent chance to get extra energy at the start of the turn
     
     // Effective game stats
     public Dictionary<Attributes, int> stats = new Dictionary<Attributes, int>();
@@ -87,6 +91,11 @@ public class BasicUnit : MonoBehaviour
             stunned = true;
         }
         HandleEffects();
+
+        if (alive)
+        {
+            GetEnergy();
+        }
     }
 
     // Take this much damage with a number of modifiers
@@ -215,7 +224,7 @@ public class BasicUnit : MonoBehaviour
             print("Invalid targets");
             return;
         }
-        for (int i = start; i < end; i++)
+        for (int i = start; i <= end; i++)
         {
             AttackPosition(i, attribute, percentBaseDmg);
         }
@@ -307,6 +316,16 @@ public class BasicUnit : MonoBehaviour
         }
 
 
+    }
+
+    // Gets energy at the start of the turn using unit's energy stats
+    public void GetEnergy()
+    {
+        int energyGained = energyGain;
+        if (Random.Range(1, 100) <= energyBonusChance)
+            energyGained++;
+        energy += energyGained;
+        popupText.EnergyPopup(energyGained);
     }
 
     // Makes a check for the given attribute and returns true/false.

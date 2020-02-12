@@ -10,12 +10,14 @@ public class StatsDisplay : MonoBehaviour
     public TextMeshProUGUI hpText;
     public TextMeshProUGUI statsText;
     public TextMeshProUGUI effectsText;
+    public TextMeshProUGUI energyText;
 
 
     public void UpdateDisplay(BasicUnit unit)
     {
         unitName.text = unit.unitName;
         hpText.text = "HP: " + unit.hp + " / " + unit.maxHp;
+        energyText.text = "Energy: " + unit.energy;
         statsText.text = "Speed: " + unit.speed + "\n" +
                             "Armor: " + unit.armor + "\n" +
                             "Dodge: " + unit.dodge + "\n" +

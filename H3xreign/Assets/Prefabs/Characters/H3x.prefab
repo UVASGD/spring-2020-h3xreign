@@ -4051,9 +4051,13 @@ MonoBehaviour:
   intellect: 95
   willpower: 90
   charm: 80
+  energy: 0
+  energyGain: 1
+  energyBonusChance: 30
   combat: {fileID: 0}
   moveset:
   - {fileID: 11400000, guid: f7b728b252fc3014fb83af139fcc7b75, type: 2}
+  - {fileID: 11400000, guid: 89f1573bf03087d4c91697c1bfb9da48, type: 2}
   side: 1
   alive: 1
   stunned: 0

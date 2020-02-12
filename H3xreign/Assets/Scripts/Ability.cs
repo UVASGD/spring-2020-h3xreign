@@ -14,6 +14,9 @@ public class Ability : ScriptableObject
 
     public int[] targetablePositions;  // Valid positions this ability can target (on the enemy side)
     public BasicUnit.Attributes attribute;  // What attribute do we use for this ability?
+    public bool targetAll;
+
+    public int energyCost;  // Cost of using this ability
 
     public bool attack;  // Is this an attack ability?
     public float attackMod = 1;  // % of base damage the ability does
@@ -32,10 +35,16 @@ public class Ability : ScriptableObject
     public bool UseAction(BasicUnit user, int position)
     {
         bool outcome = true;
-        if (ValidTarget(position))
+        if (user.energy >= energyCost && ValidTarget(position))
         {
-            if (attack)
+            user.energy -= energyCost;
+
+            if (attack && !targetAll)
                 user.AttackPosition(position, attribute, attackMod);
+            else if (attack && targetAll)
+                user.AttackPositions((short)targetablePositions[0], 
+                    (short)targetablePositions[targetablePositions.Length-1], 
+                    attribute, attackMod);
         }
         else
             return false;

@@ -57,6 +57,8 @@ public class CombatController : MonoBehaviour
 
                 if (activeUnit.alive && !activeUnit.stunned)
                 {
+                    if (Input.GetKeyDown(KeyCode.E))
+                        activeUnit.GetEnergy();
                     if (activeUnit.unitName != "H3x")
                     {
                         if (Input.GetKeyDown(KeyCode.Alpha0))
@@ -82,6 +84,8 @@ public class CombatController : MonoBehaviour
                             activeUnit.AffectPositions(0, 4, BasicUnit.Effects.stun);
                         else if (Input.GetKeyDown(KeyCode.H))
                             activeUnit.AffectPositions(0, 4, BasicUnit.Effects.hacked, 4);
+                        else if (Input.GetKeyDown(KeyCode.X))
+                            activeUnit.Action(1, 0);
                     }
                 }
                 if (activeUnit.stunned)
