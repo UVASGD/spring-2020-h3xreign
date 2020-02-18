@@ -20,13 +20,16 @@ public class StatsDisplay : MonoBehaviour
         energyText.text = "Energy: " + unit.energy;
         statsText.text = "Speed: " + unit.speed + "\n" +
                             "Armor: " + unit.armor + "\n" +
-                            "Dodge: " + unit.dodge + "\n" +
-                            "Power: " + unit.power + "\n" +
+                            "Dodge: " + unit.dodge + "\n\n" +
+                            /*"Power: " + unit.power + "\n" +
                             "Finess: " + unit.finess + "\n" +
                             "Tenacity: " + unit.tenacity + "\n" +
                             "Intellect: " + unit.intellect + "\n" +
                             "Willpower: " + unit.willpower + "\n" +
-                            "Charm: " + unit.charm;
+                            "Charm: " + unit.charm;*/
+                            "Accuracy: " + unit.accuracy + "\n" +
+                            "Ingenuity: " + unit.ingenuity + "\n" +
+                            "Resolve: " + unit.resolve;
         string currentEffects = "";
         foreach (BasicUnit.Effects effect in unit.activeEffects.Keys)
         {

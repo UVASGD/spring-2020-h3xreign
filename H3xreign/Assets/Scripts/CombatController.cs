@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class CombatController : MonoBehaviour
 {
+    public static CombatController combatController;
+
+
     public BasicUnit[] leftside;
     public BasicUnit[] rightside;
 
@@ -19,7 +22,10 @@ public class CombatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (combatController != this)
+        {
+            combatController = this;
+        }
     }
 
     // Update is called once per frame
@@ -53,6 +59,7 @@ public class CombatController : MonoBehaviour
             }
             if (activeUnit)
             {
+                display.UpdateDisplay(activeUnit);
                 transform.position = activeUnit.transform.position;
 
                 if (activeUnit.alive && !activeUnit.stunned)

@@ -1977,12 +1977,9 @@ MonoBehaviour:
   armor: 5
   dodge: 5
   crit: 10
-  power: 75
-  finess: 75
-  tenacity: 70
-  intellect: 65
-  willpower: 55
-  charm: 55
+  accuracy: 70
+  ingenuity: 65
+  resolve: 80
   energy: 0
   energyGain: 1
   energyBonusChance: 10

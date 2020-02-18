@@ -5,7 +5,8 @@ using UnityEngine;
 public class BasicUnit : MonoBehaviour
 {
     public enum Sides { left, right };
-    public enum Attributes { power, finess, tenacity, intellect, willpower, charm };
+    //public enum Attributes { power, finess, tenacity, intellect, willpower, charm };
+    public enum Attributes { accuracy, ingenuity, resolve };
     public enum Effects { none, stun, burn, armor, dodge, confused, precise, clumsy, hacked };
     
     [Header("Utility")]
@@ -25,13 +26,22 @@ public class BasicUnit : MonoBehaviour
 
     // Stats are directly chance to succeed on task that requires that attribute
     // For example, a power of 70 means a 70% chance to succeed on a strength-based attack or check
-    public int power;  // Chance of success for strength attacks and checks
-    public int finess;  // Chance of success for dexterity attacks and checks
-    public int tenacity;  // Chance of success for constitution checks and resisting physical effects
-    public int intellect;  // Chance of success for intellect abilities
-    public int willpower;  // Chance of success for willpower abilities & resisting mental effects
-    public int charm;  // Chance of success for fucking
 
+    /* OLD STATS, CONSIDERING REPLACING WITH THREE
+    public int power;  // Chance of success for strength attacks and checks (str)
+    public int finess;  // Chance of success for dexterity attacks and checks (dex)
+    public int tenacity;  // Chance of success for constitution checks and resisting physical effects (con)
+    public int intellect;  // Chance of success for intellect abilities (int)
+    public int willpower;  // Chance of success for willpower abilities & resisting mental effects (wis)
+    public int charm;  // Chance of success for fucking (cha)
+    */
+
+    // NEW STATS
+    public int accuracy;  // Chance of success with physical attacks (str + dex)
+    public int ingenuity;  // Chance of success with abilities and special interactions (int + cha)
+    public int resolve;  // Chance of success for resisting effects (con + wis)
+
+    // Energy
     public int energy;  // Current energy to use for abilities
     public int energyGain = 1;  // Energy gain per turn (usually 1)
     public int energyBonusChance;  // Percent chance to get extra energy at the start of the turn
@@ -148,7 +158,7 @@ public class BasicUnit : MonoBehaviour
     // "Oh god it burns!"
     public void EffectUnit(Effects effect, int turns = 1)
     {
-        if (Roll(Attributes.tenacity))
+        if (Roll(Attributes.resolve))
         {
             print("Resisted");
             if (effect == Effects.stun)
@@ -261,12 +271,18 @@ public class BasicUnit : MonoBehaviour
     // Makes the dictionary if it doesnt exist and updates the values
     public void UpdateStats()
     {
+        /* OLD STATS
         stats[Attributes.power] = power;
         stats[Attributes.finess] = finess;
         stats[Attributes.tenacity] = tenacity;
         stats[Attributes.intellect] = intellect;
         stats[Attributes.willpower] = willpower;
         stats[Attributes.charm] = charm;
+        */
+
+        stats[Attributes.accuracy] = accuracy;
+        stats[Attributes.ingenuity] = ingenuity;
+        stats[Attributes.resolve] = resolve;
     }
 
     // Updates effects at the start of the turn

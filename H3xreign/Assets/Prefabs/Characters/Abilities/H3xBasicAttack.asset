@@ -16,12 +16,16 @@ MonoBehaviour:
   abilityDescription: H3x attacks a single target
   origin: {fileID: 0}
   targetablePositions: 00000000010000000200000003000000
-  attribute: 3
+  attribute: 0
+  targetAll: 0
+  energyCost: 0
   attack: 1
   attackMod: 1
   debuff: 0
   harmEffects: 
+  dbturns: 0
   buff: 0
   goodEffects: 
+  bturns: 0
   heal: 0
   healMod: 0

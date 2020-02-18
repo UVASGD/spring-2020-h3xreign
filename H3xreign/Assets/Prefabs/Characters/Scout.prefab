@@ -4276,12 +4276,9 @@ MonoBehaviour:
   armor: 1
   dodge: 30
   crit: 25
-  power: 55
-  finess: 85
-  tenacity: 60
-  intellect: 65
-  willpower: 60
-  charm: 50
+  accuracy: 75
+  ingenuity: 60
+  resolve: 55
   energy: 0
   energyGain: 1
   energyBonusChance: 15
