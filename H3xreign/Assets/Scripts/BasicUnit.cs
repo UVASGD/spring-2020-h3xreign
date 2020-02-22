@@ -53,17 +53,23 @@ public class BasicUnit : MonoBehaviour
     public Dictionary<Effects, int> activeEffects = new Dictionary<Effects, int>();
 
     [Header("Combat")]
-    public CombatController combat;
     public Ability[] moveset;
     public Sides side;
     public bool alive = true;
     public bool stunned = false;
     public int baseDamage;
     public int baseDamageRange;
+    CombatController combat;
     int modifiers = 0;
 
     protected BasicUnit[] allies;
     protected BasicUnit[] enemies;
+
+    [Header("Out of Combat")]
+    public float moveSpeed;
+    bool movement;
+    Vector3 targetPos;
+
 
     [Header("References")]
     public ParticleController particles;
@@ -79,16 +85,27 @@ public class BasicUnit : MonoBehaviour
         {
             activeEffects[eff] = 0;
         }
+        combat = CombatController.combatController;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
         if (alive && hp <= 0)
         {
             Die();
             // Unconscious or dead
+        }
+
+        if(alive)
+        {
+            if(movement)
+            {
+                Vector3 dir = (targetPos - transform.position).normalized;
+                transform.position += dir * speed * Time.deltaTime;
+                if (Vector3.Distance(transform.position, targetPos) < .1)
+                    movement = false;
+            }
         }
     }
 
@@ -354,6 +371,25 @@ public class BasicUnit : MonoBehaviour
     public bool Roll(Attributes attribute)
     {
         return Random.Range(0, 100) < Mathf.Clamp(stats[attribute] + modifiers, 0, 95);
+    }
+
+    public void EnterCombat(int pos)
+    {
+        MoveToPosition(combat.positions[pos].position);
+        if(side == Sides.left)
+        {
+            combat.leftside[pos] = this;
+        }
+        else
+        {
+            combat.rightside[pos - 4] = this;
+        }
+    }
+
+    public void MoveToPosition(Vector3 pos)
+    {
+        movement = true;
+        targetPos = pos;
     }
     
     // Pretty self explainatory

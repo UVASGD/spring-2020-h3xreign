@@ -7,9 +7,13 @@ public class CombatController : MonoBehaviour
 {
     public static CombatController combatController;
 
+    public Transform[] positions;
 
     public BasicUnit[] leftside;
     public BasicUnit[] rightside;
+
+    PartyManager party;
+    public GameObject pointer;
 
     public StatsDisplay display;
 
@@ -17,15 +21,22 @@ public class CombatController : MonoBehaviour
 
     BasicUnit activeUnit;
 
-    bool inCombat;
+    [HideInInspector]
+    public bool inCombat = false;
+    
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         if (combatController != this)
         {
             combatController = this;
         }
+    }
+
+    private void Start()
+    {
+        party = PartyManager.party;
     }
 
     // Update is called once per frame
@@ -44,6 +55,7 @@ public class CombatController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             SetInitiative();
+            party.EnterCombat();
             inCombat = true;
             //while (turnOrder.Count > 0)
             //{
@@ -60,7 +72,7 @@ public class CombatController : MonoBehaviour
             if (activeUnit)
             {
                 display.UpdateDisplay(activeUnit);
-                transform.position = activeUnit.transform.position;
+                pointer.transform.position = activeUnit.transform.position + Vector3.up * .1f;
 
                 if (activeUnit.alive && !activeUnit.stunned)
                 {
@@ -190,7 +202,15 @@ public class CombatController : MonoBehaviour
         else if (rightAlive && !leftAlive)
             print("Right side wins!");
 
-        return !leftAlive || !rightAlive;
+        // If this is true, combat is over
+        if (!leftAlive || !rightAlive)
+        {
+            party.Formation();
+            return true;
+        }
+        return false;
     }
+
+    
 
 }

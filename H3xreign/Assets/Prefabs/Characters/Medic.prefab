@@ -661,7 +661,6 @@ MonoBehaviour:
   energy: 0
   energyGain: 1
   energyBonusChance: 50
-  combat: {fileID: 0}
   moveset:
   - {fileID: 11400000, guid: 1db3cf0e4aea6f2408db66dba6ff7be6, type: 2}
   side: 0
@@ -669,6 +668,7 @@ MonoBehaviour:
   stunned: 0
   baseDamage: 7
   baseDamageRange: 2
+  moveSpeed: 2
   particles: {fileID: 2722619227736436110}
   popupText: {fileID: 2315626412294194176}
 --- !u!1 &1599896932360352341

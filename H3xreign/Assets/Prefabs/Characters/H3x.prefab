@@ -4051,7 +4051,6 @@ MonoBehaviour:
   energy: 0
   energyGain: 1
   energyBonusChance: 30
-  combat: {fileID: 0}
   moveset:
   - {fileID: 11400000, guid: f7b728b252fc3014fb83af139fcc7b75, type: 2}
   - {fileID: 11400000, guid: 89f1573bf03087d4c91697c1bfb9da48, type: 2}
@@ -4060,6 +4059,7 @@ MonoBehaviour:
   stunned: 0
   baseDamage: 12
   baseDamageRange: 4
+  moveSpeed: 2
   particles: {fileID: 1171338519937777805}
   popupText: {fileID: 8086859684026969331}
 --- !u!1 &4912299735068215598
