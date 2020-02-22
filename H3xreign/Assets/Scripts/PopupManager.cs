@@ -13,6 +13,7 @@ public class PopupManager : MonoBehaviour
     public PopupText resistHacked;
     public PopupText resistStunned;
     public PopupText dead;
+    public PopupText energy;
 
 
     public void DamagePopup(int dmg, bool isCrit)
@@ -60,5 +61,11 @@ public class PopupManager : MonoBehaviour
     public void DeathPopup()
     {
         Instantiate(dead.gameObject, transform.position + Vector3.up * 2, transform.rotation);
+    }
+
+    public void EnergyPopup(int energyGain)
+    {
+        (Instantiate(energy.gameObject, transform.position + Vector3.up * 2, transform.rotation)
+            as GameObject).GetComponent<PopupText>().Say("+" + energyGain.ToString() + " Energy");
     }
 }

@@ -655,12 +655,12 @@ MonoBehaviour:
   armor: 3
   dodge: 15
   crit: 15
-  power: 60
-  finess: 70
-  tenacity: 65
-  intellect: 65
-  willpower: 80
-  charm: 60
+  accuracy: 65
+  ingenuity: 75
+  resolve: 65
+  energy: 0
+  energyGain: 1
+  energyBonusChance: 50
   combat: {fileID: 0}
   moveset:
   - {fileID: 11400000, guid: 1db3cf0e4aea6f2408db66dba6ff7be6, type: 2}

@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class CombatController : MonoBehaviour
 {
+    public static CombatController combatController;
+
+
     public BasicUnit[] leftside;
     public BasicUnit[] rightside;
 
@@ -19,7 +22,10 @@ public class CombatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (combatController != this)
+        {
+            combatController = this;
+        }
     }
 
     // Update is called once per frame
@@ -53,10 +59,13 @@ public class CombatController : MonoBehaviour
             }
             if (activeUnit)
             {
+                display.UpdateDisplay(activeUnit);
                 transform.position = activeUnit.transform.position;
 
                 if (activeUnit.alive && !activeUnit.stunned)
                 {
+                    if (Input.GetKeyDown(KeyCode.E))
+                        activeUnit.GetEnergy();
                     if (activeUnit.unitName != "H3x")
                     {
                         if (Input.GetKeyDown(KeyCode.Alpha0))
@@ -82,6 +91,8 @@ public class CombatController : MonoBehaviour
                             activeUnit.AffectPositions(0, 4, BasicUnit.Effects.stun);
                         else if (Input.GetKeyDown(KeyCode.H))
                             activeUnit.AffectPositions(0, 4, BasicUnit.Effects.hacked, 4);
+                        else if (Input.GetKeyDown(KeyCode.X))
+                            activeUnit.Action(1, 0);
                     }
                 }
                 if (activeUnit.stunned)
