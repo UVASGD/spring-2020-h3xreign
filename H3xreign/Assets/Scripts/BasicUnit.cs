@@ -27,7 +27,7 @@ public class BasicUnit : MonoBehaviour
     // Stats are directly chance to succeed on task that requires that attribute
     // For example, a power of 70 means a 70% chance to succeed on a strength-based attack or check
 
-    /* OLD STATS, CONSIDERING REPLACING WITH THREE
+    /* OLD STATS, CONSIDERING REPLACING WITH THE THREE BELOW
     public int power;  // Chance of success for strength attacks and checks (str)
     public int finess;  // Chance of success for dexterity attacks and checks (dex)
     public int tenacity;  // Chance of success for constitution checks and resisting physical effects (con)
@@ -72,6 +72,7 @@ public class BasicUnit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Initialize everything when the game starts
         UpdateStats();
         Ragdoll(false);
         foreach (Effects eff in System.Enum.GetValues(typeof(Effects)))
@@ -94,18 +95,22 @@ public class BasicUnit : MonoBehaviour
     // Run this at the start of the unit's turn
     public void OnTurnStart()
     {
+        // Check if stunned
         stunned = false;
         if(activeEffects[Effects.stun] > 0)
         {
             print("Stunned! Turn skipped");
             stunned = true;
         }
-        HandleEffects();
-
-        if (alive)
+        
+        // Gain energy at the start of turn, unless we are stunned, dead, or hacked
+        if (alive && !stunned && activeEffects[Effects.hacked] <= 0)
         {
             GetEnergy();
         }
+
+        // Handle all effects, applying them to the unit and decrementing their count.
+        HandleEffects();
     }
 
     // Take this much damage with a number of modifiers
@@ -305,7 +310,7 @@ public class BasicUnit : MonoBehaviour
         // Burning, take DoT
         if (activeEffects[Effects.burn] > 0)
         {
-            hp -= Random.Range(1, 10);
+            Hurt(Random.Range(1, 10));
             activeEffects[Effects.burn]--;
         }
         // Buff to all accuracy
@@ -320,7 +325,7 @@ public class BasicUnit : MonoBehaviour
             modifiers -= 10;
             activeEffects[Effects.clumsy]--;
         }
-        // Large debuff to everything
+        // Large debuff to everything and cannot gain energy
         if (activeEffects[Effects.hacked] > 0)
         {
             //particles.hacked.Play();
