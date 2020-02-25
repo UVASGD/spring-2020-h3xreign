@@ -415,4 +415,9 @@ public class BasicUnit : MonoBehaviour
                 rb.AddForce(Random.insideUnitSphere * 10f, ForceMode.Impulse);
         }
     }
+
+    public void Dance(bool dancing = true)
+    {
+        GetComponent<Animator>().SetBool("Dance", dancing);
+    }
 }

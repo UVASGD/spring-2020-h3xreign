@@ -52,6 +52,16 @@ public class CombatController : MonoBehaviour
             SceneManager.LoadScene("3dScene");
             return;
         }
+        // Oh lets break it down!
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            foreach (BasicUnit unit in leftside)
+                if (unit != null)
+                    unit.Dance();
+            foreach (BasicUnit unit in rightside)
+                if (unit != null)
+                    unit.Dance();
+        }
         if(Input.GetKeyDown(KeyCode.Space))
         {
             SetInitiative();

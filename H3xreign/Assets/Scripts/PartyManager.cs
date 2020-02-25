@@ -36,6 +36,10 @@ public class PartyManager : MonoBehaviour
             if (Input.GetKey(KeyCode.S))
                 transform.position += -1 * Vector3.forward * Time.deltaTime;
         }
+        if (Input.GetKeyDown(KeyCode.D))
+            DanceDanceBaby();
+        else if (Input.GetKeyDown(KeyCode.F))
+            DanceDanceBaby(false);
     }
 
     // Tells all party members to enter combat
@@ -55,5 +59,13 @@ public class PartyManager : MonoBehaviour
         {
             partyMembers[i].MoveToPosition(positions[i].position);
         }
+    }
+
+    // Oh let's break it down!
+    public void DanceDanceBaby(bool dance = true)
+    {
+        foreach (BasicUnit unit in partyMembers)
+            if (unit != null)
+                unit.Dance(dance);
     }
 }
