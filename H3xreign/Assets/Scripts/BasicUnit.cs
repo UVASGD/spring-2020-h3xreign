@@ -74,6 +74,7 @@ public class BasicUnit : MonoBehaviour
     [Header("References")]
     public ParticleController particles;
     public PopupManager popupText;
+    Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -86,6 +87,7 @@ public class BasicUnit : MonoBehaviour
             activeEffects[eff] = 0;
         }
         combat = CombatController.combatController;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -99,10 +101,11 @@ public class BasicUnit : MonoBehaviour
 
         if(alive)
         {
-            if(movement)
+            animator.SetBool("Moving", movement);
+            if (movement)
             {
                 Vector3 dir = (targetPos - transform.position).normalized;
-                transform.position += dir * speed * Time.deltaTime;
+                transform.position += dir * moveSpeed * Time.deltaTime;
                 if (Vector3.Distance(transform.position, targetPos) < .1)
                     movement = false;
             }
@@ -159,6 +162,7 @@ public class BasicUnit : MonoBehaviour
             print("Dodged!");
             popupText.DodgePopup();
             particles.miss.Play();
+            animator.SetTrigger("Dodge");
             return false;
         }
         // Hit
@@ -166,12 +170,14 @@ public class BasicUnit : MonoBehaviour
         {
             particles.hit.Play();
             Hurt(dmg, true);
+            animator.SetTrigger("Hit");
             return true;
         }
         else
         {
             particles.hit.Play();
             Hurt(dmg);
+            animator.SetTrigger("Hit");
             return true;
         }
     }
@@ -234,6 +240,7 @@ public class BasicUnit : MonoBehaviour
         }
         target.particles.miss.Play();
         target.popupText.MissPopup();
+        target.animator.SetTrigger("Dodge");
         return false;
     }
 
@@ -398,7 +405,7 @@ public class BasicUnit : MonoBehaviour
         print(unitName + " is dead! rip");
         popupText.DeathPopup();
         alive = false;
-        GetComponent<Animator>().enabled = false;
+        animator.enabled = false;
         Ragdoll(true);
         //GetComponent<SpriteRenderer>().color = new Color(.3f, 0f, 0f);
         //Destroy(gameObject);
@@ -418,6 +425,6 @@ public class BasicUnit : MonoBehaviour
 
     public void Dance(bool dancing = true)
     {
-        GetComponent<Animator>().SetBool("Dance", dancing);
+        animator.SetBool("Dance", dancing);
     }
 }

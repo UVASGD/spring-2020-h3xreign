@@ -32,9 +32,9 @@ public class PartyManager : MonoBehaviour
         if(!combat.inCombat)
         {
             if (Input.GetKey(KeyCode.W))
-                transform.position += Vector3.forward * Time.deltaTime;
+                transform.position += Vector3.forward * Time.deltaTime * 2.5f;
             if (Input.GetKey(KeyCode.S))
-                transform.position += -1 * Vector3.forward * Time.deltaTime;
+                transform.position += -1 * Vector3.forward * Time.deltaTime * 2.5f;
         }
         if (Input.GetKeyDown(KeyCode.D))
             DanceDanceBaby();

@@ -4059,7 +4059,7 @@ MonoBehaviour:
   stunned: 0
   baseDamage: 12
   baseDamageRange: 4
-  moveSpeed: 2
+  moveSpeed: 5
   particles: {fileID: 1171338519937777805}
   popupText: {fileID: 8086859684026969331}
 --- !u!1 &4912299735068215598
