@@ -53,26 +53,9 @@ public class CombatController : MonoBehaviour
             SceneManager.LoadScene("3dScene");
             return;
         }
-        // Oh lets break it down!
-        if(Input.GetKeyDown(KeyCode.D))
-        {
-            foreach (BasicUnit unit in leftside)
-                if (unit != null)
-                    unit.Dance();
-            foreach (BasicUnit unit in rightside)
-                if (unit != null)
-                    unit.Dance();
-        }
         if(Input.GetKeyDown(KeyCode.Space))
         {
             EngageWithParty(enemies);
-            SetInitiative();
-            inCombat = true;
-            //while (turnOrder.Count > 0)
-            //{
-            //    print(turnOrder.Dequeue().unitName);
-            //}
-            print("Initiative done!");
         }
         if (Input.GetKeyDown(KeyCode.P))
             party.TPK();
@@ -80,10 +63,12 @@ public class CombatController : MonoBehaviour
             party.ReviveParty();
         if (inCombat)
         {
+            if (Input.GetKeyDown(KeyCode.Return))
+                Win();
+
             if (Input.GetKeyDown(KeyCode.N))
-            {
                 NextTurn();
-            }
+
             if (activeUnit)
             {
                 display.UpdateDisplay(activeUnit);
@@ -179,10 +164,18 @@ public class CombatController : MonoBehaviour
         activeUnit = nextUp;
     }
 
+    // Initiates combat with passed in enemy group
     public void EngageWithParty(EnemyGroup enemyParty)
     {
-        party.EnterCombat();
-        enemyParty.EnterCombat();
+        if (!enemyParty.Defeated())
+        {
+            party.EnterCombat();
+            enemyParty.EnterCombat();
+            SetInitiative();
+            inCombat = true;
+        }
+        else
+            print("Group already defeated!");
     }
 
     // Returns list of units on same side as current unit
@@ -231,6 +224,13 @@ public class CombatController : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    // Automatically wins combat for the player
+    public void Win()
+    {
+        foreach (BasicUnit unit in rightside)
+            unit.Die();
     }
 
     

@@ -68,4 +68,13 @@ public class EnemyGroup : MonoBehaviour
         foreach (BasicUnit unit in groupMembers)
             unit.Die();
     }
+
+    // Returns true if everybody is dead
+    public bool Defeated()
+    {
+        bool aliveUnit = false;
+        foreach (BasicUnit unit in groupMembers)
+            aliveUnit = aliveUnit || unit.alive;
+        return !aliveUnit;
+    }
 }
