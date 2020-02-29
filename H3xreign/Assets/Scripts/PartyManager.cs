@@ -68,4 +68,18 @@ public class PartyManager : MonoBehaviour
             if (unit != null)
                 unit.Dance(dance);
     }
+
+    // Brings unconscious units in the party back to life
+    public void ReviveParty()
+    {
+        foreach (BasicUnit unit in partyMembers)
+            unit.Revive();
+    }
+
+    // "It happens. Deal with it bitches"
+    public void TPK()
+    {
+        foreach (BasicUnit unit in partyMembers)
+            unit.Die();
+    }
 }

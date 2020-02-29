@@ -73,6 +73,10 @@ public class CombatController : MonoBehaviour
             //}
             print("Initiative done!");
         }
+        if (Input.GetKeyDown(KeyCode.P))
+            party.TPK();
+        if (Input.GetKeyDown(KeyCode.O))
+            party.ReviveParty();
         if (inCombat)
         {
             if (Input.GetKeyDown(KeyCode.N))
@@ -216,6 +220,7 @@ public class CombatController : MonoBehaviour
         if (!leftAlive || !rightAlive)
         {
             party.Formation();
+            party.ReviveParty();
             return true;
         }
         return false;

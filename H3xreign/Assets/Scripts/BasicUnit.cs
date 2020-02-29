@@ -423,6 +423,20 @@ public class BasicUnit : MonoBehaviour
         }
     }
 
+    // Brings units back to life with max hp if they are dead
+    public void Revive()
+    {
+        if (!alive)
+        {
+            print(unitName + " has been revived!");
+            hp = maxHp;
+            alive = true;
+            Ragdoll(false);
+            animator.enabled = true;
+            animator.SetTrigger("Revive");
+        }
+    }
+
     public void Dance(bool dancing = true)
     {
         animator.SetBool("Dance", dancing);
