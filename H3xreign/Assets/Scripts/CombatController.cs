@@ -13,6 +13,7 @@ public class CombatController : MonoBehaviour
     public BasicUnit[] rightside;
 
     PartyManager party;
+    public EnemyGroup enemies;
     public GameObject pointer;
 
     public StatsDisplay display;
@@ -64,8 +65,8 @@ public class CombatController : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Space))
         {
+            EngageWithParty(enemies);
             SetInitiative();
-            party.EnterCombat();
             inCombat = true;
             //while (turnOrder.Count > 0)
             //{
@@ -176,6 +177,12 @@ public class CombatController : MonoBehaviour
             return;
         }
         activeUnit = nextUp;
+    }
+
+    public void EngageWithParty(EnemyGroup enemyParty)
+    {
+        party.EnterCombat();
+        enemyParty.EnterCombat();
     }
 
     // Returns list of units on same side as current unit
