@@ -130,27 +130,27 @@ PrefabInstance:
     - target: {fileID: 1598863970474522652, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
         type: 3}
       propertyPath: armor
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1598863970474522652, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
         type: 3}
       propertyPath: dodge
-      value: 12
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1598863970474522652, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
         type: 3}
       propertyPath: crit
-      value: 10
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1598863970474522652, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
         type: 3}
       propertyPath: ingenuity
-      value: 50
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 1598863970474522652, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
         type: 3}
       propertyPath: resolve
-      value: 70
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 1598863970474522652, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
         type: 3}

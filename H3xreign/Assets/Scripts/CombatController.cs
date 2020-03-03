@@ -139,6 +139,7 @@ public class CombatController : MonoBehaviour
                 unit.Initiative();
             }
         }
+        NextTurn();
         //print("Initiative set");
     }
 
