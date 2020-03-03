@@ -165,7 +165,12 @@ PrefabInstance:
     - target: {fileID: 1598863970474522652, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
         type: 3}
       propertyPath: baseDamage
-      value: 6
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1598863970474522652, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
+        type: 3}
+      propertyPath: accuracy
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 1598863970736600568, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
         type: 3}
@@ -180,7 +185,12 @@ PrefabInstance:
     - target: {fileID: 1599881004259366109, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
         type: 3}
       propertyPath: m_Name
-      value: B0t
+      value: B0t Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 1685740098723095309, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07, type: 3}

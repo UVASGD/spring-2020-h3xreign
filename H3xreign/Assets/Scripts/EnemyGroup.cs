@@ -43,7 +43,7 @@ public class EnemyGroup : MonoBehaviour
     {
         for (int i = 0; i < groupMembers.Length; i++)
         {
-            groupMembers[i].MoveToPosition(positions[i].position);
+            groupMembers[i].MoveToPosition(positions[i]);
         }
     }
 
@@ -51,7 +51,7 @@ public class EnemyGroup : MonoBehaviour
     public void DanceDanceBaby(bool dance = true)
     {
         foreach (BasicUnit unit in groupMembers)
-            if (unit != null)
+            if (unit)
                 unit.Dance(dance);
     }
 
@@ -59,14 +59,16 @@ public class EnemyGroup : MonoBehaviour
     public void ReviveParty()
     {
         foreach (BasicUnit unit in groupMembers)
-            unit.Revive();
+            if (unit)
+                unit.Revive();
     }
 
     // "It happens. Deal with it bitches"
     public void TPK()
     {
         foreach (BasicUnit unit in groupMembers)
-            unit.Die();
+            if (unit)
+                unit.Die();
     }
 
     // Returns true if everybody is dead
@@ -74,7 +76,8 @@ public class EnemyGroup : MonoBehaviour
     {
         bool aliveUnit = false;
         foreach (BasicUnit unit in groupMembers)
-            aliveUnit = aliveUnit || unit.alive;
+            if (unit)
+                aliveUnit = aliveUnit || unit.alive;
         return !aliveUnit;
     }
 }

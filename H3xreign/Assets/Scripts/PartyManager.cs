@@ -31,10 +31,23 @@ public class PartyManager : MonoBehaviour
     {
         if(!combat.inCombat)
         {
+            foreach (BasicUnit unit in partyMembers)
+                if (unit)
+                    unit.animator.SetBool("Party Movement", false);
             if (Input.GetKey(KeyCode.W))
+            {
                 transform.position += Vector3.forward * Time.deltaTime * 2.5f;
+                foreach (BasicUnit unit in partyMembers)
+                    if (unit)
+                        unit.animator.SetBool("Party Movement", true);
+            }
             if (Input.GetKey(KeyCode.S))
+            {
                 transform.position += -1 * Vector3.forward * Time.deltaTime * 2.5f;
+                foreach (BasicUnit unit in partyMembers)
+                    if (unit)
+                        unit.animator.SetBool("Party Movement", true);
+            }
         }
         if (Input.GetKeyDown(KeyCode.D))
             DanceDanceBaby();
@@ -57,7 +70,7 @@ public class PartyManager : MonoBehaviour
     {
         for (int i = 0; i < partyMembers.Length; i++)
         {
-            partyMembers[i].MoveToPosition(positions[i].position);
+            partyMembers[i].MoveToPosition(positions[i]);
         }
     }
 
@@ -65,7 +78,7 @@ public class PartyManager : MonoBehaviour
     public void DanceDanceBaby(bool dance = true)
     {
         foreach (BasicUnit unit in partyMembers)
-            if (unit != null)
+            if (unit)
                 unit.Dance(dance);
     }
 
@@ -73,19 +86,20 @@ public class PartyManager : MonoBehaviour
     public void ReviveParty()
     {
         foreach (BasicUnit unit in partyMembers)
-            unit.Revive();
+            if (unit)
+                unit.Revive();
     }
 
     // "It happens. Deal with it bitches"
     public void TPK()
     {
         foreach (BasicUnit unit in partyMembers)
-            unit.Die();
+            if (unit)
+                unit.Die();
     }
     
     private void OnTriggerEnter(Collider other)
     {
-        print("Collision with " + other.gameObject.name);
         // If we enter an enemy's trigger, engage with them
         if (other.tag == "EnemyGroup")
             combat.EngageWithParty(other.gameObject.GetComponent<EnemyGroup>());

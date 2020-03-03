@@ -68,13 +68,14 @@ public class BasicUnit : MonoBehaviour
     [Header("Out of Combat")]
     public float moveSpeed;
     bool movement;
-    Vector3 targetPos;
+    Transform targetPos;
 
 
     [Header("References")]
     public ParticleController particles;
     public PopupManager popupText;
-    Animator animator;
+    [HideInInspector]
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -104,10 +105,14 @@ public class BasicUnit : MonoBehaviour
             animator.SetBool("Moving", movement);
             if (movement)
             {
-                Vector3 dir = (targetPos - transform.position).normalized;
+                Vector3 dir = (targetPos.position - transform.position).normalized;
                 transform.position += dir * moveSpeed * Time.deltaTime;
-                if (Vector3.Distance(transform.position, targetPos) < .1)
+                transform.LookAt(targetPos);
+                if (Vector3.Distance(transform.position, targetPos.position) < .1)
+                {
                     movement = false;
+                    transform.rotation = targetPos.rotation;
+                }
             }
         }
     }
@@ -215,8 +220,14 @@ public class BasicUnit : MonoBehaviour
     // Use Action/ability/move/turn
     public void Action(int index, int target)
     {
-        if (moveset[index].UseAction(this, target)) ;
-            //combat.NextTurn();
+        if (moveset[index].UseAction(this, target))
+        {
+            if (side == Sides.left)
+                combat.IndicateTarget(target + 4);
+            else
+                combat.IndicateTarget(target);
+            combat.NextTurn();
+        }
         else
             print("Invalid target!");
     }
@@ -382,7 +393,7 @@ public class BasicUnit : MonoBehaviour
 
     public void EnterCombat(int pos)
     {
-        MoveToPosition(combat.positions[pos].position);
+        MoveToPosition(combat.positions[pos]);
         if(side == Sides.left)
         {
             combat.leftside[pos] = this;
@@ -391,12 +402,18 @@ public class BasicUnit : MonoBehaviour
         {
             combat.rightside[pos - 4] = this;
         }
+        animator.SetBool("Party Movement", false);
     }
 
-    public void MoveToPosition(Vector3 pos)
+    public void MoveToPosition(Transform pos)
     {
         movement = true;
         targetPos = pos;
+    }
+    public void ResetPosition()
+    {
+        transform.position = targetPos.position;
+        transform.rotation = targetPos.rotation;
     }
     
     // Pretty self explainatory

@@ -4045,8 +4045,8 @@ MonoBehaviour:
   armor: 4
   dodge: 30
   crit: 10
-  accuracy: 75
-  ingenuity: 90
+  accuracy: 85
+  ingenuity: 95
   resolve: 60
   energy: 0
   energyGain: 1
@@ -4057,11 +4057,12 @@ MonoBehaviour:
   side: 1
   alive: 1
   stunned: 0
-  baseDamage: 12
+  baseDamage: 16
   baseDamageRange: 4
-  moveSpeed: 5
+  moveSpeed: 4
   particles: {fileID: 1171338519937777805}
   popupText: {fileID: 8086859684026969331}
+  animator: {fileID: 0}
 --- !u!1 &4912299735068215598
 GameObject:
   m_ObjectHideFlags: 0

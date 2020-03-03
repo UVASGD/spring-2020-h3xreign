@@ -15,6 +15,7 @@ public class CombatController : MonoBehaviour
     PartyManager party;
     public EnemyGroup enemies;
     public GameObject pointer;
+    public GameObject targetIndicator;
 
     public StatsDisplay display;
 
@@ -43,6 +44,9 @@ public class CombatController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        pointer.SetActive(inCombat);
+        targetIndicator.SetActive(inCombat);
+
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
@@ -128,9 +132,12 @@ public class CombatController : MonoBehaviour
         
         foreach (BasicUnit unit in positions)
         {
-            print(unit.unitName);
-            turnOrder.Enqueue(unit);
-            unit.Initiative();
+            if (unit)
+            {
+                print(unit.unitName);
+                turnOrder.Enqueue(unit);
+                unit.Initiative();
+            }
         }
         //print("Initiative set");
     }
@@ -162,6 +169,7 @@ public class CombatController : MonoBehaviour
             return;
         }
         activeUnit = nextUp;
+        nextUp.ResetPosition();
     }
 
     // Initiates combat with passed in enemy group
@@ -169,6 +177,8 @@ public class CombatController : MonoBehaviour
     {
         if (!enemyParty.Defeated())
         {
+            enemies = enemyParty;
+            transform.position = party.transform.position;
             party.EnterCombat();
             enemyParty.EnterCombat();
             SetInitiative();
@@ -202,13 +212,15 @@ public class CombatController : MonoBehaviour
         bool leftAlive = false;
         foreach (BasicUnit unit in leftside)
         {
-            leftAlive = unit.alive || leftAlive;
+            if (unit)
+                leftAlive = unit.alive || leftAlive;
         }
 
         bool rightAlive = false;
         foreach (BasicUnit unit in rightside)
         {
-            rightAlive = unit.alive || rightAlive;
+            if (unit)
+                rightAlive = unit.alive || rightAlive;
         }
 
         if (leftAlive && !rightAlive)
@@ -226,11 +238,16 @@ public class CombatController : MonoBehaviour
         return false;
     }
 
+    public void IndicateTarget(int pos)
+    {
+        targetIndicator.transform.position = positions[pos].position + Vector3.up * .1f;
+        targetIndicator.GetComponent<Animator>().SetTrigger("Indicate Target");
+    }
+
     // Automatically wins combat for the player
     public void Win()
     {
-        foreach (BasicUnit unit in rightside)
-            unit.Die();
+        enemies.TPK();
     }
 
     
