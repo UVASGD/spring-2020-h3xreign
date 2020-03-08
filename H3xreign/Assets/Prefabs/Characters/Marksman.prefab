@@ -4039,7 +4039,7 @@ Animator:
   m_GameObject: {fileID: 4492106672946579404}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: f13349cc09b03d447a26b54d406aaa8e, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ffb13a07709e5a443a7f59f41a8e7953, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -4067,22 +4067,23 @@ MonoBehaviour:
   armor: 3
   dodge: 15
   crit: 15
-  accuracy: 75
+  accuracy: 82
   ingenuity: 55
   resolve: 60
   energy: 0
   energyGain: 1
   energyBonusChance: 15
-  combat: {fileID: 0}
   moveset:
   - {fileID: 11400000, guid: 1db3cf0e4aea6f2408db66dba6ff7be6, type: 2}
   side: 0
   alive: 1
   stunned: 0
-  baseDamage: 11
-  baseDamageRange: 3
+  baseDamage: 15
+  baseDamageRange: 4
+  moveSpeed: 4
   particles: {fileID: 7919092644177096499}
   popupText: {fileID: 9133994888722586643}
+  animator: {fileID: 0}
 --- !u!1 &4492108092569635928
 GameObject:
   m_ObjectHideFlags: 0

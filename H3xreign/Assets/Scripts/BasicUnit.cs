@@ -53,21 +53,29 @@ public class BasicUnit : MonoBehaviour
     public Dictionary<Effects, int> activeEffects = new Dictionary<Effects, int>();
 
     [Header("Combat")]
-    public CombatController combat;
     public Ability[] moveset;
     public Sides side;
     public bool alive = true;
     public bool stunned = false;
     public int baseDamage;
     public int baseDamageRange;
+    CombatController combat;
     int modifiers = 0;
 
     protected BasicUnit[] allies;
     protected BasicUnit[] enemies;
 
+    [Header("Out of Combat")]
+    public float moveSpeed;
+    bool movement;
+    Transform targetPos;
+
+
     [Header("References")]
     public ParticleController particles;
     public PopupManager popupText;
+    [HideInInspector]
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -79,16 +87,33 @@ public class BasicUnit : MonoBehaviour
         {
             activeEffects[eff] = 0;
         }
+        combat = CombatController.combatController;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
         if (alive && hp <= 0)
         {
             Die();
             // Unconscious or dead
+        }
+
+        if(alive)
+        {
+            animator.SetBool("Moving", movement);
+            if (movement)
+            {
+                Vector3 dir = (targetPos.position - transform.position).normalized;
+                transform.position += dir * moveSpeed * Time.deltaTime;
+                transform.LookAt(targetPos);
+                if (Vector3.Distance(transform.position, targetPos.position) < .1)
+                {
+                    movement = false;
+                    transform.rotation = targetPos.rotation;
+                }
+            }
         }
     }
 
@@ -142,6 +167,7 @@ public class BasicUnit : MonoBehaviour
             print("Dodged!");
             popupText.DodgePopup();
             particles.miss.Play();
+            animator.SetTrigger("Dodge");
             return false;
         }
         // Hit
@@ -149,12 +175,14 @@ public class BasicUnit : MonoBehaviour
         {
             particles.hit.Play();
             Hurt(dmg, true);
+            animator.SetTrigger("Hit");
             return true;
         }
         else
         {
             particles.hit.Play();
             Hurt(dmg);
+            animator.SetTrigger("Hit");
             return true;
         }
     }
@@ -192,8 +220,14 @@ public class BasicUnit : MonoBehaviour
     // Use Action/ability/move/turn
     public void Action(int index, int target)
     {
-        if (moveset[index].UseAction(this, target)) ;
-            //combat.NextTurn();
+        if (moveset[index].UseAction(this, target))
+        {
+            if (side == Sides.left)
+                combat.IndicateTarget(target + 4);
+            else
+                combat.IndicateTarget(target);
+            combat.NextTurn();
+        }
         else
             print("Invalid target!");
     }
@@ -217,6 +251,7 @@ public class BasicUnit : MonoBehaviour
         }
         target.particles.miss.Play();
         target.popupText.MissPopup();
+        target.animator.SetTrigger("Dodge");
         return false;
     }
 
@@ -355,6 +390,31 @@ public class BasicUnit : MonoBehaviour
     {
         return Random.Range(0, 100) < Mathf.Clamp(stats[attribute] + modifiers, 0, 95);
     }
+
+    public void EnterCombat(int pos)
+    {
+        MoveToPosition(combat.positions[pos]);
+        if(side == Sides.left)
+        {
+            combat.leftside[pos] = this;
+        }
+        else
+        {
+            combat.rightside[pos - 4] = this;
+        }
+        animator.SetBool("Party Movement", false);
+    }
+
+    public void MoveToPosition(Transform pos)
+    {
+        movement = true;
+        targetPos = pos;
+    }
+    public void ResetPosition()
+    {
+        transform.position = targetPos.position;
+        transform.rotation = targetPos.rotation;
+    }
     
     // Pretty self explainatory
     public void Die()
@@ -362,7 +422,7 @@ public class BasicUnit : MonoBehaviour
         print(unitName + " is dead! rip");
         popupText.DeathPopup();
         alive = false;
-        GetComponent<Animator>().enabled = false;
+        animator.enabled = false;
         Ragdoll(true);
         //GetComponent<SpriteRenderer>().color = new Color(.3f, 0f, 0f);
         //Destroy(gameObject);
@@ -378,5 +438,24 @@ public class BasicUnit : MonoBehaviour
             if (ragdoll)
                 rb.AddForce(Random.insideUnitSphere * 10f, ForceMode.Impulse);
         }
+    }
+
+    // Brings units back to life with max hp if they are dead
+    public void Revive()
+    {
+        if (!alive)
+        {
+            print(unitName + " has been revived!");
+            hp = maxHp;
+            alive = true;
+            Ragdoll(false);
+            animator.enabled = true;
+            animator.SetTrigger("Revive");
+        }
+    }
+
+    public void Dance(bool dancing = true)
+    {
+        animator.SetBool("Dance", dancing);
     }
 }
