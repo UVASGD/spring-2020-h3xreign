@@ -25,6 +25,9 @@ public class CombatController : MonoBehaviour
 
     [HideInInspector]
     public bool inCombat = false;
+
+    bool waiting = false;
+    float waitTill;
     
 
     // Start is called before the first frame update
@@ -77,45 +80,52 @@ public class CombatController : MonoBehaviour
             {
                 display.UpdateDisplay(activeUnit);
                 pointer.transform.position = activeUnit.transform.position + Vector3.up * .1f;
+                if (!waiting)
+                {
 
-                if (activeUnit.alive && !activeUnit.stunned)
-                {
-                    if (Input.GetKeyDown(KeyCode.E))
-                        activeUnit.GetEnergy();
-                    if (activeUnit.unitName != "H3x")
+                    if (activeUnit.alive && !activeUnit.stunned)
                     {
-                        if (Input.GetKeyDown(KeyCode.Alpha0))
-                            activeUnit.Action(0, 0);
-                        else if (Input.GetKeyDown(KeyCode.Alpha1))
-                            activeUnit.Action(0, 1);
-                        else if (Input.GetKeyDown(KeyCode.Alpha2))
-                            activeUnit.Action(0, 2);
-                        else if (Input.GetKeyDown(KeyCode.Alpha3))
-                            activeUnit.Action(0, 3);
+                        if (Input.GetKeyDown(KeyCode.E))
+                            activeUnit.GetEnergy();
+                        if (activeUnit.unitName != "H3x")
+                        {
+                            if (Input.GetKeyDown(KeyCode.Alpha0))
+                                activeUnit.Action(0, 0);
+                            else if (Input.GetKeyDown(KeyCode.Alpha1))
+                                activeUnit.Action(0, 1);
+                            else if (Input.GetKeyDown(KeyCode.Alpha2))
+                                activeUnit.Action(0, 2);
+                            else if (Input.GetKeyDown(KeyCode.Alpha3))
+                                activeUnit.Action(0, 3);
+                        }
+                        else
+                        {
+                            if (Input.GetKeyDown(KeyCode.Alpha0))
+                                activeUnit.Action(0, 0);
+                            else if (Input.GetKeyDown(KeyCode.Alpha1))
+                                activeUnit.Action(0, 1);
+                            else if (Input.GetKeyDown(KeyCode.Alpha2))
+                                activeUnit.Action(0, 2);
+                            else if (Input.GetKeyDown(KeyCode.Alpha3))
+                                activeUnit.Action(0, 3);
+                            else if (Input.GetKeyDown(KeyCode.R))
+                                activeUnit.AffectPositions(0, 4, BasicUnit.Effects.stun);
+                            else if (Input.GetKeyDown(KeyCode.H))
+                                activeUnit.AffectPositions(0, 4, BasicUnit.Effects.hacked, 4);
+                            else if (Input.GetKeyDown(KeyCode.X))
+                                activeUnit.Action(1, 0);
+                        }
                     }
-                    else
+                    if (activeUnit.stunned)
                     {
-                        if (Input.GetKeyDown(KeyCode.Alpha0))
-                            activeUnit.Action(0, 0);
-                        else if (Input.GetKeyDown(KeyCode.Alpha1))
-                            activeUnit.Action(0, 1);
-                        else if (Input.GetKeyDown(KeyCode.Alpha2))
-                            activeUnit.Action(0, 2);
-                        else if (Input.GetKeyDown(KeyCode.Alpha3))
-                            activeUnit.Action(0, 3);
-                        else if (Input.GetKeyDown(KeyCode.R))
-                            activeUnit.AffectPositions(0, 4, BasicUnit.Effects.stun);
-                        else if (Input.GetKeyDown(KeyCode.H))
-                            activeUnit.AffectPositions(0, 4, BasicUnit.Effects.hacked, 4);
-                        else if (Input.GetKeyDown(KeyCode.X))
-                            activeUnit.Action(1, 0);
+                        NextTurn();
                     }
                 }
-                if (activeUnit.stunned)
-                {
-                    NextTurn();
-                }
+                else
+                    if (Time.time >= waitTill)
+                        NextTurn();
             }
+            
             inCombat = !CheckVictory();
         }
     }
@@ -150,27 +160,37 @@ public class CombatController : MonoBehaviour
 
     public void NextTurn()
     {
-        BasicUnit nextUp = turnOrder.Dequeue();
-        turnOrder.Enqueue(nextUp);  // Put back into turn order at the end
-        nextUp.OnTurnStart();
-        display.UpdateDisplay(nextUp);
-        if (nextUp.alive && !nextUp.stunned)
-            print("Next up is " + nextUp.unitName);
-        else if (!nextUp.alive)
+        if (!waiting)
         {
-            print("Next up is " + nextUp.unitName + " but they are dead!");
-            nextUp.popupText.DeathPopup();
-            NextTurn();
-            return;
+            waiting = true;
+            waitTill = Time.time + 1f;
         }
-        else if (nextUp.stunned)
+        else
         {
-            print("Next up is " + nextUp.unitName + " but they are stunned! Skipping turn...");
-            NextTurn();
-            return;
+            waiting = false;
+            BasicUnit nextUp = turnOrder.Dequeue();
+            turnOrder.Enqueue(nextUp);  // Put back into turn order at the end
+            activeUnit = nextUp;
+            nextUp.OnTurnStart();
+            display.UpdateDisplay(nextUp);
+            if (nextUp.alive && !nextUp.stunned)
+                print("Next up is " + nextUp.unitName);
+            else if (!nextUp.alive)
+            {
+                print("Next up is " + nextUp.unitName + " but they are dead!");
+                nextUp.popupText.DeathPopup();
+                NextTurn();
+                waitTill = Time.time + .5f;
+                return;
+            }
+            else if (nextUp.stunned)
+            {
+                print("Next up is " + nextUp.unitName + " but they are stunned! Skipping turn...");
+                NextTurn();
+                return;
+            }
+            nextUp.ResetPosition();
         }
-        activeUnit = nextUp;
-        nextUp.ResetPosition();
     }
 
     // Initiates combat with passed in enemy group
