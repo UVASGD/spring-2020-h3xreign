@@ -4017,7 +4017,7 @@ Animator:
   m_GameObject: {fileID: 4912292685562126252}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: f13349cc09b03d447a26b54d406aaa8e, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 879b57a73d744f54dbbf6789ad45943a, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -4045,22 +4045,24 @@ MonoBehaviour:
   armor: 4
   dodge: 30
   crit: 10
-  power: 50
-  finess: 70
-  tenacity: 70
-  intellect: 95
-  willpower: 90
-  charm: 80
-  combat: {fileID: 0}
+  accuracy: 85
+  ingenuity: 95
+  resolve: 60
+  energy: 0
+  energyGain: 1
+  energyBonusChance: 30
   moveset:
   - {fileID: 11400000, guid: f7b728b252fc3014fb83af139fcc7b75, type: 2}
+  - {fileID: 11400000, guid: 89f1573bf03087d4c91697c1bfb9da48, type: 2}
   side: 1
   alive: 1
   stunned: 0
-  baseDamage: 12
+  baseDamage: 16
   baseDamageRange: 4
+  moveSpeed: 4
   particles: {fileID: 1171338519937777805}
   popupText: {fileID: 8086859684026969331}
+  animator: {fileID: 0}
 --- !u!1 &4912299735068215598
 GameObject:
   m_ObjectHideFlags: 0

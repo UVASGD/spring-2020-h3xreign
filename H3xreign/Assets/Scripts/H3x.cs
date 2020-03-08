@@ -15,7 +15,7 @@ public class H3x : BasicUnit
     public void BufferOverflow(short position)
     {
         // If we hit 
-        if (AttackPosition(position, Attributes.intellect))
+        if (AttackPosition(position, Attributes.ingenuity))
         {
             for (int pos = position + 1; pos < enemies.Length; pos++)
             {

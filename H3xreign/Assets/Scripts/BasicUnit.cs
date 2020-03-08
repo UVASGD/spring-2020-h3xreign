@@ -5,7 +5,8 @@ using UnityEngine;
 public class BasicUnit : MonoBehaviour
 {
     public enum Sides { left, right };
-    public enum Attributes { power, finess, tenacity, intellect, willpower, charm };
+    //public enum Attributes { power, finess, tenacity, intellect, willpower, charm };
+    public enum Attributes { accuracy, ingenuity, resolve };
     public enum Effects { none, stun, burn, armor, dodge, confused, precise, clumsy, hacked };
     
     [Header("Utility")]
@@ -25,12 +26,25 @@ public class BasicUnit : MonoBehaviour
 
     // Stats are directly chance to succeed on task that requires that attribute
     // For example, a power of 70 means a 70% chance to succeed on a strength-based attack or check
-    public int power;  // Chance of success for strength attacks and checks
-    public int finess;  // Chance of success for dexterity attacks and checks
-    public int tenacity;  // Chance of success for constitution checks and resisting physical effects
-    public int intellect;  // Chance of success for intellect abilities
-    public int willpower;  // Chance of success for willpower abilities & resisting mental effects
-    public int charm;  // Chance of success for fucking
+
+    /* OLD STATS, CONSIDERING REPLACING WITH THE THREE BELOW
+    public int power;  // Chance of success for strength attacks and checks (str)
+    public int finess;  // Chance of success for dexterity attacks and checks (dex)
+    public int tenacity;  // Chance of success for constitution checks and resisting physical effects (con)
+    public int intellect;  // Chance of success for intellect abilities (int)
+    public int willpower;  // Chance of success for willpower abilities & resisting mental effects (wis)
+    public int charm;  // Chance of success for fucking (cha)
+    */
+
+    // NEW STATS
+    public int accuracy;  // Chance of success with physical attacks (str + dex)
+    public int ingenuity;  // Chance of success with abilities and special interactions (int + cha)
+    public int resolve;  // Chance of success for resisting effects (con + wis)
+
+    // Energy
+    public int energy;  // Current energy to use for abilities
+    public int energyGain = 1;  // Energy gain per turn (usually 1)
+    public int energyBonusChance;  // Percent chance to get extra energy at the start of the turn
     
     // Effective game stats
     public Dictionary<Attributes, int> stats = new Dictionary<Attributes, int>();
@@ -39,53 +53,88 @@ public class BasicUnit : MonoBehaviour
     public Dictionary<Effects, int> activeEffects = new Dictionary<Effects, int>();
 
     [Header("Combat")]
-    public CombatController combat;
     public Ability[] moveset;
     public Sides side;
     public bool alive = true;
     public bool stunned = false;
     public int baseDamage;
     public int baseDamageRange;
+    CombatController combat;
     int modifiers = 0;
 
     protected BasicUnit[] allies;
     protected BasicUnit[] enemies;
 
+    [Header("Out of Combat")]
+    public float moveSpeed;
+    bool movement;
+    Transform targetPos;
+
+
     [Header("References")]
     public ParticleController particles;
     public PopupManager popupText;
+    [HideInInspector]
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
+        // Initialize everything when the game starts
         UpdateStats();
         Ragdoll(false);
         foreach (Effects eff in System.Enum.GetValues(typeof(Effects)))
         {
             activeEffects[eff] = 0;
         }
+        combat = CombatController.combatController;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
         if (alive && hp <= 0)
         {
             Die();
             // Unconscious or dead
+        }
+
+        if(alive)
+        {
+            animator.SetBool("Moving", movement);
+            if (movement)
+            {
+                Vector3 dir = (targetPos.position - transform.position).normalized;
+                transform.position += dir * moveSpeed * Time.deltaTime;
+                transform.LookAt(targetPos);
+                if (Vector3.Distance(transform.position, targetPos.position) < .1)
+                {
+                    movement = false;
+                    transform.rotation = targetPos.rotation;
+                }
+            }
         }
     }
 
     // Run this at the start of the unit's turn
     public void OnTurnStart()
     {
+        // Check if stunned
         stunned = false;
         if(activeEffects[Effects.stun] > 0)
         {
             print("Stunned! Turn skipped");
             stunned = true;
         }
+        
+        // Gain energy at the start of turn, unless we are stunned, dead, or hacked
+        if (alive && !stunned && activeEffects[Effects.hacked] <= 0)
+        {
+            GetEnergy();
+        }
+
+        // Handle all effects, applying them to the unit and decrementing their count.
         HandleEffects();
     }
 
@@ -118,6 +167,7 @@ public class BasicUnit : MonoBehaviour
             print("Dodged!");
             popupText.DodgePopup();
             particles.miss.Play();
+            animator.SetTrigger("Dodge");
             return false;
         }
         // Hit
@@ -125,12 +175,14 @@ public class BasicUnit : MonoBehaviour
         {
             particles.hit.Play();
             Hurt(dmg, true);
+            animator.SetTrigger("Hit");
             return true;
         }
         else
         {
             particles.hit.Play();
             Hurt(dmg);
+            animator.SetTrigger("Hit");
             return true;
         }
     }
@@ -139,7 +191,7 @@ public class BasicUnit : MonoBehaviour
     // "Oh god it burns!"
     public void EffectUnit(Effects effect, int turns = 1)
     {
-        if (Roll(Attributes.tenacity))
+        if (Roll(Attributes.resolve))
         {
             print("Resisted");
             if (effect == Effects.stun)
@@ -168,8 +220,14 @@ public class BasicUnit : MonoBehaviour
     // Use Action/ability/move/turn
     public void Action(int index, int target)
     {
-        if (moveset[index].UseAction(this, target)) ;
-            //combat.NextTurn();
+        if (moveset[index].UseAction(this, target))
+        {
+            if (side == Sides.left)
+                combat.IndicateTarget(target + 4);
+            else
+                combat.IndicateTarget(target);
+            combat.NextTurn();
+        }
         else
             print("Invalid target!");
     }
@@ -193,6 +251,7 @@ public class BasicUnit : MonoBehaviour
         }
         target.particles.miss.Play();
         target.popupText.MissPopup();
+        target.animator.SetTrigger("Dodge");
         return false;
     }
 
@@ -215,7 +274,7 @@ public class BasicUnit : MonoBehaviour
             print("Invalid targets");
             return;
         }
-        for (int i = start; i < end; i++)
+        for (int i = start; i <= end; i++)
         {
             AttackPosition(i, attribute, percentBaseDmg);
         }
@@ -252,12 +311,18 @@ public class BasicUnit : MonoBehaviour
     // Makes the dictionary if it doesnt exist and updates the values
     public void UpdateStats()
     {
+        /* OLD STATS
         stats[Attributes.power] = power;
         stats[Attributes.finess] = finess;
         stats[Attributes.tenacity] = tenacity;
         stats[Attributes.intellect] = intellect;
         stats[Attributes.willpower] = willpower;
         stats[Attributes.charm] = charm;
+        */
+
+        stats[Attributes.accuracy] = accuracy;
+        stats[Attributes.ingenuity] = ingenuity;
+        stats[Attributes.resolve] = resolve;
     }
 
     // Updates effects at the start of the turn
@@ -280,7 +345,7 @@ public class BasicUnit : MonoBehaviour
         // Burning, take DoT
         if (activeEffects[Effects.burn] > 0)
         {
-            hp -= Random.Range(1, 10);
+            Hurt(Random.Range(1, 10));
             activeEffects[Effects.burn]--;
         }
         // Buff to all accuracy
@@ -295,7 +360,7 @@ public class BasicUnit : MonoBehaviour
             modifiers -= 10;
             activeEffects[Effects.clumsy]--;
         }
-        // Large debuff to everything
+        // Large debuff to everything and cannot gain energy
         if (activeEffects[Effects.hacked] > 0)
         {
             //particles.hacked.Play();
@@ -309,11 +374,46 @@ public class BasicUnit : MonoBehaviour
 
     }
 
+    // Gets energy at the start of the turn using unit's energy stats
+    public void GetEnergy()
+    {
+        int energyGained = energyGain;
+        if (Random.Range(1, 100) <= energyBonusChance)
+            energyGained++;
+        energy += energyGained;
+        popupText.EnergyPopup(energyGained);
+    }
+
     // Makes a check for the given attribute and returns true/false.
     // Cannot have a better chance than 95%
     public bool Roll(Attributes attribute)
     {
         return Random.Range(0, 100) < Mathf.Clamp(stats[attribute] + modifiers, 0, 95);
+    }
+
+    public void EnterCombat(int pos)
+    {
+        MoveToPosition(combat.positions[pos]);
+        if(side == Sides.left)
+        {
+            combat.leftside[pos] = this;
+        }
+        else
+        {
+            combat.rightside[pos - 4] = this;
+        }
+        animator.SetBool("Party Movement", false);
+    }
+
+    public void MoveToPosition(Transform pos)
+    {
+        movement = true;
+        targetPos = pos;
+    }
+    public void ResetPosition()
+    {
+        transform.position = targetPos.position;
+        transform.rotation = targetPos.rotation;
     }
     
     // Pretty self explainatory
@@ -322,7 +422,7 @@ public class BasicUnit : MonoBehaviour
         print(unitName + " is dead! rip");
         popupText.DeathPopup();
         alive = false;
-        GetComponent<Animator>().enabled = false;
+        animator.enabled = false;
         Ragdoll(true);
         //GetComponent<SpriteRenderer>().color = new Color(.3f, 0f, 0f);
         //Destroy(gameObject);
@@ -338,5 +438,24 @@ public class BasicUnit : MonoBehaviour
             if (ragdoll)
                 rb.AddForce(Random.insideUnitSphere * 10f, ForceMode.Impulse);
         }
+    }
+
+    // Brings units back to life with max hp if they are dead
+    public void Revive()
+    {
+        if (!alive)
+        {
+            print(unitName + " has been revived!");
+            hp = maxHp;
+            alive = true;
+            Ragdoll(false);
+            animator.enabled = true;
+            animator.SetTrigger("Revive");
+        }
+    }
+
+    public void Dance(bool dancing = true)
+    {
+        animator.SetBool("Dance", dancing);
     }
 }

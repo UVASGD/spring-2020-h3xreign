@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 047111061c62aea4aa55e9654b01b98b, type: 3}
-  m_Name: H3xBasicAttack
+  m_Name: H3xAreaAttack
   m_EditorClassIdentifier: 
-  abilityName: H3x Basic Attack
-  abilityDescription: H3x attacks a single target
+  abilityName: Overflow
+  abilityDescription: H3x targets all opponents and heavily damages them.
   origin: {fileID: 0}
   targetablePositions: 00000000010000000200000003000000
-  attribute: 0
-  targetAll: 0
-  energyCost: 0
+  attribute: 1
+  targetAll: 1
+  energyCost: 5
   attack: 1
-  attackMod: 1
+  attackMod: 2.5
   debuff: 0
   harmEffects: 
   dbturns: 0
