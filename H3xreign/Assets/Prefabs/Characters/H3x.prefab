@@ -4039,6 +4039,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: H3x
+  className: L33t H4x0r
   maxHp: 150
   hp: 150
   speed: 5

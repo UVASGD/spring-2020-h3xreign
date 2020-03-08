@@ -4061,6 +4061,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Axton
+  className: Marksman
   maxHp: 50
   hp: 50
   speed: 5

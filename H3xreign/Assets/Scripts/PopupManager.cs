@@ -14,6 +14,7 @@ public class PopupManager : MonoBehaviour
     public PopupText resistStunned;
     public PopupText dead;
     public PopupText energy;
+    public PopupText fail;
 
 
     public void DamagePopup(int dmg, bool isCrit)
@@ -67,5 +68,10 @@ public class PopupManager : MonoBehaviour
     {
         (Instantiate(energy.gameObject, transform.position + Vector3.up * 2, transform.rotation)
             as GameObject).GetComponent<PopupText>().Say("+" + energyGain.ToString() + " Energy");
+    }
+
+    public void FailPopup()
+    {
+        Instantiate(fail.gameObject, transform.position + Vector3.up * 3f, transform.rotation);
     }
 }

@@ -172,6 +172,11 @@ PrefabInstance:
       propertyPath: accuracy
       value: 70
       objectReference: {fileID: 0}
+    - target: {fileID: 1598863970474522652, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
+        type: 3}
+      propertyPath: className
+      value: B0t
+      objectReference: {fileID: 0}
     - target: {fileID: 1598863970736600568, guid: 14e1557527d1b9c4b8d3ac7dd79a9f07,
         type: 3}
       propertyPath: m_ConnectedAnchor.y

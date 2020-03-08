@@ -649,6 +649,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Surg-30N
+  className: Medic
   maxHp: 50
   hp: 50
   speed: 4

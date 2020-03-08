@@ -1971,6 +1971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Ellie
+  className: Engineer
   maxHp: 50
   hp: 50
   speed: 3

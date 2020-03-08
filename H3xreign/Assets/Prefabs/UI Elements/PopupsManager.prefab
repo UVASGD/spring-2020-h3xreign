@@ -55,3 +55,4 @@ MonoBehaviour:
     type: 3}
   dead: {fileID: 1664741833245767426, guid: 637f39ed43c4e1a43a11a0213be2517a, type: 3}
   energy: {fileID: 8837600528874521930, guid: f34196ffd85064d42bb896333d7e5895, type: 3}
+  fail: {fileID: 7709339218081297048, guid: b4e8ac522b031df4bb5be3aee2e8c354, type: 3}

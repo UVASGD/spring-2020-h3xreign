@@ -34,7 +34,7 @@ public class Ability : ScriptableObject
 
 
 
-    public bool UseAction(BasicUnit user, int position)
+    public virtual bool UseAction(BasicUnit user, int position)
     {
         bool outcome = true;
         if (user.energy >= energyCost && ValidTarget(position))
@@ -64,7 +64,7 @@ public class Ability : ScriptableObject
         return outcome;
     }
 
-    bool ValidTarget(int position)
+    protected bool ValidTarget(int position)
     {
         foreach (int i in targetablePositions)
             if (position == i)

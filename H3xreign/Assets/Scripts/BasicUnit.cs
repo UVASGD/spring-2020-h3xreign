@@ -11,6 +11,7 @@ public class BasicUnit : MonoBehaviour
     
     [Header("Utility")]
     public string unitName;
+    public string className;
     
 
 
@@ -379,7 +380,11 @@ public class BasicUnit : MonoBehaviour
     {
         int energyGained = energyGain;
         if (Random.Range(1, 100) <= energyBonusChance)
-            energyGained++;
+            energyGained += energyGain;
+        AddEnergy(energyGained);
+    }
+    public void AddEnergy(int energyGained)
+    {
         energy += energyGained;
         popupText.EnergyPopup(energyGained);
     }
@@ -457,5 +462,16 @@ public class BasicUnit : MonoBehaviour
     public void Dance(bool dancing = true)
     {
         animator.SetBool("Dance", dancing);
+    }
+
+
+    public BasicUnit[] GetAllies()
+    {
+        return allies;
+    }
+
+    public BasicUnit[] GetEnemies()
+    {
+        return enemies;
     }
 }
