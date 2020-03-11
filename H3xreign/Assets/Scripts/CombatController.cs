@@ -21,7 +21,8 @@ public class CombatController : MonoBehaviour
 
     Queue<BasicUnit> turnOrder = new Queue<BasicUnit>();
 
-    BasicUnit activeUnit;
+    [HideInInspector]
+    public BasicUnit activeUnit;
 
     [HideInInspector]
     public bool inCombat = false;
